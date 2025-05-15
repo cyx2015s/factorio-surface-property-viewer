@@ -7,7 +7,7 @@ This is a mod that allow you to view the current properties of the viewing surfa
 Technically, all surface_properties are `number` types, but some mods encode other data in `number` form, and the number itself doesn't mean anything. You can register a localiser function to define the way a surface property is displayed. For example, you can test with the following code at run time:
 
 ```lua
-/c remote.add_interface(
+remote.add_interface(
     "test_i",
     {
         test_f = function(value)
@@ -16,7 +16,7 @@ Technically, all surface_properties are `number` types, but some mods encode oth
     }
 )
 
-/c remote.call(
+remote.call(
     "spv",
     {
         surface_property = "pressure",
@@ -28,3 +28,7 @@ Technically, all surface_properties are `number` types, but some mods encode oth
 ```
 
 You can check the pressure at top left, it now displays the pressure in bar instead of hPa.
+
+## TODO
+
+- [ ] Auto detect surface properties that are intended to be hidden, and/or add another remote interface to hide them.
