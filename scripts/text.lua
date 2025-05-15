@@ -66,13 +66,18 @@ Text.build_text = function(surface)
         ret_list[#ret_list + 1] = {
             "spv.kv-pair",
             { "spv.space-platform-name" },
-            "[space-platform=" .. platform_name .. "]",
+            {
+                "",
+                "[space-platform=" .. platform_name .. "]",
+                platform_name
+            }
         }
     end
     for surface_property, attrs in pairs(storage.surface_property_cache) do
         if attrs.hidden then
             goto continue
         end
+        log(surface_property)
         local value = surface.get_property(surface_property)
         ret_list[#ret_list + 1] = {
             "spv.kv-pair",

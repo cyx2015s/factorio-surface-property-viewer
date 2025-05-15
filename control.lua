@@ -3,11 +3,11 @@ Text = require("scripts.text")
 
 script.on_configuration_changed(function()
     Text.refresh_surface_property_cache()
-    for _, player in pairs(game.players) do
-        GUI.destroy_button(player.index)
-        GUI.destroy_frame(player.index)
-        GUI.create_button(player.index)
-    end
+    -- for _, player in pairs(game.players) do
+    --     GUI.destroy_button(player.index)
+    --     GUI.destroy_frame(player.index)
+    --     GUI.create_button(player.index)
+    -- end
 end)
 
 script.on_init(function()
