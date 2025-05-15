@@ -18,6 +18,7 @@ remote.add_interface(
 
 remote.call(
     "spv",
+    "set_localiser",
     {
         surface_property = "pressure",
         remote_interface = "test_i",
