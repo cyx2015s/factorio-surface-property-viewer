@@ -82,6 +82,7 @@ Text.build_text = function(surface)
     return ret_list
 end
 
+
 Text.set_localiser = function(data)
     surface_property = data.surface_property
     remote_interface = data.remote_interface
@@ -91,8 +92,8 @@ Text.set_localiser = function(data)
             "All values must be provided. \nExample: \n/c remote.call('spv', 'set_localiser', {surface_property = 'your_surface_property' remote_interface = 'your_interface_name', localiser = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString.")
     end
     ret = remote.call(remote_interface, localiser, 0)
-    if type(ret) ~= "string" or type(ret) ~= "table" then
-        error("localiser function must always return a string or LocalisedString.")
+    if type(ret) ~= "string" and type(ret) ~= "table" then
+        error("localiser function must always return a string or LocalisedString. Got type " .. type(ret) .. " instead.")
     end
     Text.localisers[surface_property] = {
         remote_interface = remote_interface,
@@ -103,4 +104,11 @@ end
 Text.get_localiser = function(surface_property)
     return Text.localisers[surface_property]
 end
+
+Text.remove_localiser = function(surface_property)
+    if Text.localisers[surface_property] then
+        Text.localisers[surface_property] = nil
+    end
+end
+
 return Text
