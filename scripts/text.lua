@@ -1,20 +1,28 @@
 Text = {}
 
+Text.localisers = {}
 Text.refresh_surface_property_cache = function()
     storage.surface_property_cache = {}
     for _, surface_property in pairs(prototypes.surface_property) do
-        storage.surface_property_cache[surface_property.name] = surface_property.is_time
+        storage.surface_property_cache[surface_property.name] = {
+            is_time = surface_property.is_time,
+            localised_name = surface_property.localised_name or ("surface-property-name." .. surface_property.name),
+            localised_unit_key = surface_property.localised_unit_key or
+                ("surface-property-unit" .. surface_property.name)
+        }
     end
     return storage.surface_property_cache
 end
 
 
 Text.build_value_with_unit = function(surface_property, value)
-    if storage.surface_property_cache[surface_property] then
-        -- is_time = true
+    if Text.localisers[surface_property] then
+        return Text.localisers[surface_property](value)
+    end
+    if storage.surface_property_cache[surface_property].is_time then
         return { "spv.generic-time", value / 60 }
     end
-    return { "surface-property-unit." .. surface_property, value }
+    return { storage.surface_property_cache[surface_property].localised_unit_key, value }
 end
 
 
@@ -56,11 +64,11 @@ Text.build_text = function(surface)
             "[space-platform=" .. platform_name .. "]",
         }
     end
-    for surface_property, is_time in pairs(storage.surface_property_cache) do
+    for surface_property, attrs in pairs(storage.surface_property_cache) do
         local value = surface.get_property(surface_property)
         ret_list[#ret_list + 1] = {
             "spv.kv-pair",
-            { "surface-property-name." .. surface_property },
+            { attrs.localised_name },
             Text.build_value_with_unit(surface_property, value),
         }
     end
@@ -70,4 +78,15 @@ Text.build_text = function(surface)
     return ret_list
 end
 
+Text.set_localiser = function(surface_property, localiser)
+    ret = localiser(0)
+    if type(ret) ~= "string" or type(ret) ~= "table" then
+        error("localiser function must always return a string or LocalisedString.")
+    end
+    Text.localisers[surface_property] = localiser
+end
+
+Text.get_localiser = function(surface_property)
+    return Text.localisers[surface_property]
+end
 return Text

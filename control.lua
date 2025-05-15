@@ -36,3 +36,8 @@ script.on_event(defines.events.on_player_changed_surface, function(event)
         GUI.create_frame(player.index, Text.build_text(player.surface))
     end
 end)
+
+remote.add_interface("spv", {
+    "set_localiser", Text.set_localiser,
+    "get_localiser", Text.get_localiser,
+})
