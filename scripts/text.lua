@@ -89,7 +89,7 @@ Text.set_localiser = function(data)
     localiser = data.localiser
     if surface_property == nil or remote_interface == nil or localiser == nil then
         error(
-            "All values must be provided. \nExample: \n/c remote.call('spv', 'set_localiser', {surface_property = 'your_surface_property' remote_interface = 'your_interface_name', localiser = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString.")
+            "All values must be provided. \nExample: \n/c remote.call('spv', 'set_localiser', {\n  surface_property = 'your_surface_property',\n  remote_interface = 'your_interface_name',\n  localiser = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString. You also need to register your interface manually before calling this.")
     end
     ret = remote.call(remote_interface, localiser, 0)
     if type(ret) ~= "string" and type(ret) ~= "table" then
