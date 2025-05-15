@@ -41,4 +41,5 @@ remote.add_interface("spv", {
     set_localiser = Text.set_localiser,
     get_localiser = Text.get_localiser,
     remove_localiser = Text.remove_localiser,
+    refresh_surface_property_cache = Text.refresh_surface_property_cache,
 })

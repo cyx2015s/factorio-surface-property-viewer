@@ -8,7 +8,8 @@ Text.refresh_surface_property_cache = function()
             is_time = surface_property.is_time,
             localised_name = surface_property.localised_name or { "surface-property-name." .. surface_property.name },
             localised_unit_key = surface_property.localised_unit_key or
-                { "surface-property-unit" .. surface_property.name }
+                { "surface-property-unit" .. surface_property.name },
+            hidden = surface_property.hidden,
         }
     end
     return storage.surface_property_cache
@@ -69,15 +70,40 @@ Text.build_text = function(surface)
         }
     end
     for surface_property, attrs in pairs(storage.surface_property_cache) do
+        if attrs.hidden then
+            goto continue
+        end
         local value = surface.get_property(surface_property)
         ret_list[#ret_list + 1] = {
             "spv.kv-pair",
             attrs.localised_name,
             Text.build_value_with_unit(surface_property, value),
         }
+        ::continue::
     end
     if ret_list and ret_list[#ret_list] then
         ret_list[#ret_list][1] = "spv.kv-pair-noreturn"
+    end
+    if #ret_list > 21 then
+        -- must collapse internal terms to bypass the 20 parameter limit.
+        -- this way, 400 elements can be concatened.
+        local ret_list2 = {
+            { "" }
+        }
+        for i, v in ret_list do
+            if i == 1 then
+                goto continue
+            end
+            if #ret_list2[#ret_list2] < 21 then
+                table.insert(ret_list2[#ret_list2], v)
+            else
+                ret_list2[#ret_list2 + 1] = { "" }
+                table.insert(ret_list2[#ret_list2], v)
+            end
+            ::continue::
+        end
+        table.insert(ret_list2, 1, { "" })
+        return ret_list2
     end
     return ret_list
 end
