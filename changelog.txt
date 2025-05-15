@@ -3,6 +3,7 @@ Version: ?.?.?
 Date: ????-??-??
   Scripting:
     - added a remote interface to change the localiser
+    - added remote interface to remove localisers
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
 Date: 2025-05-15
