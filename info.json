@@ -2,7 +2,7 @@
   "name": "surface-property-viewer",
   "title": "Surface Property Viewer",
   "author": "tanvec",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Allow you to view the properties of the surface, without turning to factoriopedia. Maybe useful when other mods change the surface property at run time.",
   "factorio_version": "2.0",
   "dependencies": [
