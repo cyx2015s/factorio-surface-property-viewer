@@ -82,12 +82,13 @@ Text.build_text = function(surface)
     return ret_list
 end
 
-Text.set_localiser = function(surface_property, data)
+Text.set_localiser = function(data)
+    surface_property = data.surface_property
     remote_interface = data.remote_interface
     localiser = data.localiser
-    if remote_interface == nil then
+    if surface_property == nil or remote_interface == nil or localiser == nil then
         error(
-            "remote_interface must be set. \nExample: \n/c remote.call('spv', 'set_localiser', 'surface-property-name', { remote_interface = 'your_interface_name', function = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString.")
+            "All values must be provided. \nExample: \n/c remote.call('spv', 'set_localiser', {surface_property = 'your_surface_property' remote_interface = 'your_interface_name', localiser = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString.")
     end
     ret = remote.call(remote_interface, localiser, 0)
     if type(ret) ~= "string" or type(ret) ~= "table" then
