@@ -38,6 +38,6 @@ script.on_event(defines.events.on_player_changed_surface, function(event)
 end)
 
 remote.add_interface("spv", {
-    "set_localiser", Text.set_localiser,
-    "get_localiser", Text.get_localiser,
+    set_localiser = Text.set_localiser,
+    get_localiser = Text.get_localiser,
 })

@@ -22,6 +22,7 @@ GUI.create_button = function(player_index)
 end
 
 GUI.create_frame = function(player_index, content)
+    log(serpent.block(content))
     local player = game.get_player(player_index)
     if player == nil then
         return

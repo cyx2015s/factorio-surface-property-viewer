@@ -6,9 +6,9 @@ Text.refresh_surface_property_cache = function()
     for _, surface_property in pairs(prototypes.surface_property) do
         storage.surface_property_cache[surface_property.name] = {
             is_time = surface_property.is_time,
-            localised_name = surface_property.localised_name or ("surface-property-name." .. surface_property.name),
+            localised_name = surface_property.localised_name or { "surface-property-name." .. surface_property.name },
             localised_unit_key = surface_property.localised_unit_key or
-                ("surface-property-unit" .. surface_property.name)
+                { "surface-property-unit" .. surface_property.name }
         }
     end
     return storage.surface_property_cache
@@ -17,7 +17,11 @@ end
 
 Text.build_value_with_unit = function(surface_property, value)
     if Text.localisers[surface_property] then
-        return Text.localisers[surface_property](value)
+        return remote.call(
+            Text.localisers[surface_property].remote_interface,
+            Text.localisers[surface_property].localiser,
+            value
+        )
     end
     if storage.surface_property_cache[surface_property].is_time then
         return { "spv.generic-time", value / 60 }
@@ -68,7 +72,7 @@ Text.build_text = function(surface)
         local value = surface.get_property(surface_property)
         ret_list[#ret_list + 1] = {
             "spv.kv-pair",
-            { attrs.localised_name },
+            attrs.localised_name,
             Text.build_value_with_unit(surface_property, value),
         }
     end
@@ -78,12 +82,21 @@ Text.build_text = function(surface)
     return ret_list
 end
 
-Text.set_localiser = function(surface_property, localiser)
-    ret = localiser(0)
+Text.set_localiser = function(surface_property, data)
+    remote_interface = data.remote_interface
+    localiser = data.localiser
+    if remote_interface == nil then
+        error(
+            "remote_interface must be set. \nExample: \n/c remote.call('spv', 'set_localiser', 'surface-property-name', { remote_interface = 'your_interface_name', function = 'your_function_name' })\n Your function must take a number as input and return a string or LocalisedString.")
+    end
+    ret = remote.call(remote_interface, localiser, 0)
     if type(ret) ~= "string" or type(ret) ~= "table" then
         error("localiser function must always return a string or LocalisedString.")
     end
-    Text.localisers[surface_property] = localiser
+    Text.localisers[surface_property] = {
+        remote_interface = remote_interface,
+        localiser = localiser,
+    }
 end
 
 Text.get_localiser = function(surface_property)
