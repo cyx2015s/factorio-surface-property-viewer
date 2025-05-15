@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: ?.?.?
+Date: ????-??-??
+  Minor Features:
+    - hide surface properties that set hidden = true in their prototype
+    - the info panel can display up to 400 lines w/o crashing the localising system.
+---------------------------------------------------------------------------------------------------
 Version: 0.2.2
 Date: 2025-05-15
   Minor Features:
