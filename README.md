@@ -11,7 +11,7 @@ remote.add_interface(
     "test_i",
     {
         test_f = function(value)
-            return math.round(value / 10) / 100 .. "bar"
+            return math.floor(value / 10) / 100 .. "bar"
         end
     }
 )
